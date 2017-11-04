@@ -1,8 +1,8 @@
 """
 Dojo App. pick a command below
 Usage:
-    create_room
-    add_person
+    create_room <room_type> <room_name> ...
+    add_person <first_name> <last_name> (Fellow|Staff) [<wants_space>]
     q
     (-i | --interactive)
     Options:
@@ -57,15 +57,22 @@ class DojoCli(cmd.Cmd):
     @app_exec
     def do_create_room(self, arg):
         """Creates a new room
-        Usage: create_room
+        Usage: create_room <room_type> <room_name> ...
         """
-        pass
+        print(Dojo().create_room(arg))
 
     @app_exec
-    def do_quit(self, arg):
+    def do_add_person(self, arg):
+        """Creates a new room
+        Usage:
+            add_person <first_name> <last_name> (Fellow|Staff) [<wants_space>]
+        """
+        print(Dojo().add_person(arg))
+
+    def do_q(self, arg):
         """
         Exits the app.
-        Usage: quit
+        Usage: q
         """
         exit()
 
