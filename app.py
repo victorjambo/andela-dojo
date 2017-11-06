@@ -3,6 +3,7 @@ Dojo App. pick a command below
 Usage:
     create_room <room_type> <room_name> ...
     add_person <first_name> <last_name> (Fellow|Staff) [<wants_space>]
+    get_rooms
     q
     (-i | --interactive)
     Options:
@@ -59,7 +60,7 @@ class DojoCli(cmd.Cmd):
         """Creates a new room
         Usage: create_room <room_type> <room_name> ...
         """
-        print(Dojo().create_room(arg))
+        self.dojo.create_room(arg)
 
     @app_exec
     def do_add_person(self, arg):
@@ -67,7 +68,7 @@ class DojoCli(cmd.Cmd):
         Usage:
             add_person <first_name> <last_name> (Fellow|Staff) [<wants_space>]
         """
-        print(Dojo().add_person(arg))
+        self.dojo.add_person(arg)
 
     def do_q(self, arg):
         """
