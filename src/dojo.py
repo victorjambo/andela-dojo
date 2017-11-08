@@ -10,6 +10,7 @@ class Dojo(object):
     office_with_occupants = {}
 
     def create_room(self, args):
+        """Create room"""
         room_type = args["<room_type>"]
         room_name = args["<room_name>"]
         map_room = {'office': Office, 'livingspace': LivingSpace}
@@ -28,6 +29,7 @@ class Dojo(object):
                    .format(room_type.title(), new_room.room_name))
 
     def add_person(self, args):
+        """add person and allocate a random room"""
         person_name = args["<first_name>"] + " " + args["<last_name>"]
         map_people = {'staff': Staff, 'fellow': Fellow}
         designation = args["<designation>"]
@@ -39,6 +41,7 @@ class Dojo(object):
         self.allocate_random_room(new_person, designation, wants_accomodation)
 
     def allocate_random_room(self, new_person, designation, wants_accomodation):
+        """loops through all rooms and returns a random available room"""
         selected_room = {}
         office_rooms = [room for room in self.all_rooms if room.room_type == "office"]
         livingspace_rooms = [room for room in self.all_rooms if room.room_type == "livingspace"]
@@ -65,6 +68,7 @@ class Dojo(object):
                 print('No room available_office')
     
     def available_room(self, rooms, rooms_with_occupants):
+        """returns all available rooms"""
         available_rooms = []
         for room in rooms:
             if room.room_capacity >= len(rooms_with_occupants[room]):
