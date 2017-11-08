@@ -6,8 +6,8 @@ import random
 class Dojo(object):
     all_rooms = []
     all_people = []
-    living_spaces = {"None": []}
-    office_spaces = {"None": []}
+    livingspace_with_occupants = {}
+    office_with_occupants = {}
 
     def create_room(self, args):
         room_type = args["<room_type>"]
@@ -18,6 +18,12 @@ class Dojo(object):
         for item in list_name:
             new_room = map_room[item[1]](item[0])
             Dojo().all_rooms.append(new_room)
+            
+            if room_type == 'office':
+                self.office_with_occupants[new_room] = []
+            else:
+                self.livingspace_with_occupants[new_room] = []
+            
             print ("An {} called {} has been successfully created!"
                    .format(room_type.title(), new_room.room_name))
 
@@ -28,28 +34,42 @@ class Dojo(object):
         wants_accomodation = args["-w"]
         new_person = map_people[designation](person_name)
 
-        allocated_room = self.allocate(new_person, designation, wants_accomodation)
-
         print("{} {} has been successfully added."
               .format(new_person.__class__.__name__, new_person.name))
-        print("{} has been allocated the office {}."
-              .format(new_person.name, allocated_room.room_name))
+        self.allocate_random_room(new_person, designation, wants_accomodation)
 
-    def allocate(self, new_person, designation, wants_accomodation):
-        office_room = [room for room in self.all_rooms if room.room_type == "office"]
-        livingspace_room = [room for room in self.all_rooms if room.room_type == "livingspace"]
+    def allocate_random_room(self, new_person, designation, wants_accomodation):
+        selected_room = {}
+        office_rooms = [room for room in self.all_rooms if room.room_type == "office"]
+        livingspace_rooms = [room for room in self.all_rooms if room.room_type == "livingspace"]
 
-        available_room = []
+        available_office = self.available_room(office_rooms, self.office_with_occupants)
 
-        for room in office_room:
-            if room.room_capacity > len(self.office_spaces[room.room_name]):
-                available_room.append(room.room_name)
-
-        selected_room = "None"
-
-        if len(available_room):
-            selected_room = random.choice(available_room)
-        return selected_room
+        if len(available_office):
+            selected_room['office'] = random.choice(available_office)
+            self.office_with_occupants[selected_room['office']].append(new_person)
+            print("{} has been allocated the office {}."
+                  .format(new_person.name, selected_room['office']))
+        else:
+            print('No room available')
+        
+        if wants_accomodation and designation == 'fellow':
+            available_livingspace = self.available_room(livingspace_rooms, self.livingspace_with_occupants)
+            
+            if len(available_livingspace):
+                selected_room['livingspace'] = random.choice(available_livingspace)
+                self.office_with_occupants[selected_room['livingspace']].append(new_person)
+                print("{} has been allocated the livingspace {}."
+                      .format(new_person.name, selected_room['livingspace']))
+            else:
+                print('No room available_office')
+    
+    def available_room(self, rooms, rooms_with_occupants):
+        available_rooms = []
+        for room in rooms:
+            if room.room_capacity >= len(rooms_with_occupants[room]):
+                available_rooms.append(room)
+        return available_rooms
 
 
 """
@@ -57,13 +77,4 @@ class Dojo(object):
  '<designation>': 'staff',
  '<first_name>': 'vdf',
  '<last_name>': 'dfv'}
- return ("An "
-        + room_type.title()
-        + " called "
-        + new_room.room_name
-        + " has been successfully created!")
-can_accomodate = True if args.get("<wants_space>") is "Y" else False
-
-
-
 """
