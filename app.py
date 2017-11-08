@@ -3,7 +3,8 @@ Dojo App. pick a command below
 Usage:
     create_room <room_type> <room_name> ...
     add_person <first_name> <last_name> <designation> [-w]
-    get_rooms
+    print_room <room_name>
+    print_allocations [-o]
     q
     (-i | --interactive)
     Options:
@@ -74,6 +75,29 @@ class DojoCli(cmd.Cmd):
             add_person <first_name> <last_name> <designation> [-w]
         """
         self.dojo.add_person(arg)
+
+    @app_exec
+    def do_print_room(self, arg):
+        """Prints  the names of all the people in room_name
+        Usage:
+            print_room <room_name>
+        """
+        self.dojo.print_room(arg)
+
+    @app_exec
+    def do_my_rooms(self, arg):
+        """
+        Usage: my_rooms [p]
+        """
+        self.dojo.print_all_rooms(arg)
+
+    @app_exec
+    def do_print_allocations(self, arg):
+        """Prints a list of allocations onto the screen
+        Usage:
+            print_allocations [-o]
+        """
+        self.dojo.print_allocations(arg)
 
     def do_q(self, arg):
         """
