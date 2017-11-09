@@ -99,6 +99,7 @@ class DojoCli(cmd.Cmd):
         """
         self.dojo.print_allocations(arg)
 
+    @app_exec
     def do_q(self, arg):
         """
         Exits the app.

@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/victorjambo/andela-dojo.svg?branch=master)](https://travis-ci.org/victorjambo/andela-dojo)
 # Dojo
 
 

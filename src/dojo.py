@@ -14,17 +14,14 @@ class Dojo(object):
         room_type = args["<room_type>"]
         room_name = args["<room_name>"]
         map_room = {'office': Office, 'livingspace': LivingSpace}
-
         list_name = [(x, room_type) for x in room_name]
         for item in list_name:
             new_room = map_room[item[1]](item[0])
             self.all_rooms.append(new_room)
-
             if room_type == 'office':
                 self.office_with_occupants[new_room] = []
             else:
                 self.livingspace_with_occupants[new_room] = []
-
             print ("An {} called {} has been successfully created!"
                    .format(room_type.title(), new_room.room_name))
 
@@ -45,9 +42,7 @@ class Dojo(object):
         selected_room = {}
         office_rooms = [room for room in self.all_rooms if room.room_type == "office"]
         livingspace_rooms = [room for room in self.all_rooms if room.room_type == "livingspace"]
-
         available_office = self.available_room(office_rooms, self.office_with_occupants)
-
         if len(available_office):
             selected_room['office'] = random.choice(available_office)
             self.office_with_occupants[selected_room['office']].append(new_person)
@@ -55,19 +50,18 @@ class Dojo(object):
                   .format(new_person.name, selected_room['office'].room_name))
         else:
             print('No room available')
-
         if wants_accomodation and designation == 'fellow':
             available_livingspace = self.available_room(livingspace_rooms, self.livingspace_with_occupants)
-
             if len(available_livingspace):
                 selected_room['livingspace'] = random.choice(available_livingspace)
-                self.office_with_occupants[selected_room['livingspace']].append(new_person)
+                self.livingspace_with_occupants[selected_room['livingspace']].append(new_person)
                 print("{} has been allocated the livingspace {}."
-                      .format(new_person.name, selected_room['livingspace']))
+                      .format(new_person.name, selected_room['livingspace'].room_name))
             else:
                 print('No room available_office')
 
-    def available_room(self, rooms, rooms_with_occupants):
+    @staticmethod
+    def available_room(rooms, rooms_with_occupants):
         """returns all available rooms"""
         available_rooms = []
         for room in rooms:
@@ -98,12 +92,3 @@ class Dojo(object):
 
     def print_all_rooms(self, args):
         print(self.all_rooms)
-
-
-"""
-[<src.room.Office object at 0x7ff84aa75e50>, <src.room.Office object at 0x7ff84aa75e10>, <src.room.Office object at 0x7ff84aa75a90>]
-{'-w': True,
- '<designation>': 'staff',
- '<first_name>': 'vdf',
- '<last_name>': 'dfv'}
-"""
