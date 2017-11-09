@@ -1,9 +1,12 @@
-from src.room import Room, Office, LivingSpace
-from src.person import Person, Fellow, Staff
 import random
+from src.room import *
+from src.person import *
 
 
 class Dojo(object):
+    """Class Dojo to represent the building
+    Creates room, adds people to rooms and saves all that
+    """
     all_rooms = []
     all_people = []
     livingspace_with_occupants = {}
@@ -37,58 +40,67 @@ class Dojo(object):
               .format(new_person.__class__.__name__, new_person.name))
         self.allocate_random_room(new_person, designation, wants_accomodation)
 
-    def allocate_random_room(self, new_person, designation, wants_accomodation):
+    def allocate_random_room(self,
+                             new_person,
+                             designation,
+                             wants_accomodation):
         """loops through all rooms and returns a random available room"""
-        selected_room = {}
-        office_rooms = [room for room in self.all_rooms if room.room_type == "office"]
-        livingspace_rooms = [room for room in self.all_rooms if room.room_type == "livingspace"]
-        available_office = self.available_room(office_rooms, self.office_with_occupants)
-        if len(available_office):
-            selected_room['office'] = random.choice(available_office)
-            self.office_with_occupants[selected_room['office']].append(new_person)
-            print("{} has been allocated the office {}."
-                  .format(new_person.name, selected_room['office'].room_name))
-        else:
-            print('No room available')
+        office_rooms = [room for room in self.all_rooms
+                        if room.room_type == "office"]
+        livingspace_rooms = [room for room in self.all_rooms
+                             if room.room_type == "livingspace"]
+        available_office = self.available_room(office_rooms,
+                                               self.office_with_occupants)
+        self.selected_room(available_office,
+                           'office',
+                           new_person,
+                           self.office_with_occupants)
         if wants_accomodation and designation == 'fellow':
-            available_livingspace = self.available_room(livingspace_rooms, self.livingspace_with_occupants)
-            if len(available_livingspace):
-                selected_room['livingspace'] = random.choice(available_livingspace)
-                self.livingspace_with_occupants[selected_room['livingspace']].append(new_person)
-                print("{} has been allocated the livingspace {}."
-                      .format(new_person.name, selected_room['livingspace'].room_name))
-            else:
-                print('No room available_office')
+            available_livingspace = self.available_room(
+                livingspace_rooms, self.livingspace_with_occupants)
+            self.selected_room(available_livingspace,
+                               'livingspace',
+                               new_person,
+                               self.livingspace_with_occupants)
+
+    @staticmethod
+    def selected_room(available_room, room, new_person, room_with_occupants):
+        selected_room = {}
+        if len(available_room):
+            selected_room[room] = random.choice(available_room)
+            room_with_occupants[selected_room[room]].append(new_person)
+            print("{} has been allocated the office {}."
+                  .format(new_person.name, selected_room[room].room_name))
+        else:
+            print('No {} available'.format(room))
 
     @staticmethod
     def available_room(rooms, rooms_with_occupants):
         """returns all available rooms"""
         available_rooms = []
         for room in rooms:
-            if room.room_capacity >= len(rooms_with_occupants[room]):
+            if room.room_capacity > len(rooms_with_occupants[room]):
                 available_rooms.append(room)
         return available_rooms
 
     def print_room(self, args):
         room_name = args["<room_name>"]
-        print(self.room_hash_map[room_name])
+        print(self.room_name_map[room_name])
 
     def print_allocations(self, args):
         """Prints a list of allocations onto the screen"""
-        print(self.room_hash_map)
+        print(self.room_name_map)
         if args['-o']:
             try:
-                f = open('room_allocations.txt', 'w')
-                f.write('self.room_hash_map')
-                f.close()
-                print('successfully created file')
+                file = open('room_allocations.txt', 'w')
+                file.write('self.room_name_map')
+                file.close()
+                print('successfully created file and saved into it')
             except TypeError:
                 print("Couldn't save it to file")
 
     @property
-    def room_hash_map(self):
+    def room_name_map(self):
         self.office_with_occupants.update(self.livingspace_with_occupants)
-        return {room.room_name: self.office_with_occupants[room] for room in self.office_with_occupants.keys()}
-
-    def print_all_rooms(self, args):
-        print(self.all_rooms)
+        return {room.room_name: self.office_with_occupants[room]
+                for room in self.office_with_occupants.keys()}

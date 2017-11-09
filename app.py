@@ -5,6 +5,7 @@ Usage:
     add_person <first_name> <last_name> <designation> [-w]
     print_room <room_name>
     print_allocations [-o]
+    print_unallocated [-o]
     q
     (-i | --interactive)
     Options:
@@ -74,7 +75,12 @@ class DojoCli(cmd.Cmd):
         Usage:
             add_person <first_name> <last_name> <designation> [-w]
         """
-        self.dojo.add_person(arg)
+        try:
+            self.dojo.add_person(arg)
+        except KeyError:
+            cprint("Invalid command '{}'!!! try fellow or staff"
+                   .format(arg["<designation>"]), "red")
+            cprint(self.do_create_room.__doc__, "green")
 
     @app_exec
     def do_print_room(self, arg):
@@ -83,13 +89,6 @@ class DojoCli(cmd.Cmd):
             print_room <room_name>
         """
         self.dojo.print_room(arg)
-
-    @app_exec
-    def do_my_rooms(self, arg):
-        """
-        Usage: my_rooms [p]
-        """
-        self.dojo.print_all_rooms(arg)
 
     @app_exec
     def do_print_allocations(self, arg):

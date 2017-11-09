@@ -38,7 +38,8 @@ class TestDojo(TestCase):
 
     def test_add_person_successfully(self):
         """Test add person"""
-        result = "Staff victor mutai has been successfully added.\nNo room available\n"
+        result = "Staff victor mutai has"\
+                 " been successfully added.\nNo office available\n"
         self.dojo.add_person(self.person_args)
         self.assertEqual(sys.stdout.getvalue(), result)
 
