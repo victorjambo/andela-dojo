@@ -45,16 +45,9 @@ def app_exec(func):
     return fn
 
 
-def intro():
-    cprint(figlet_format("Dojo", font="slant"), "blue")
-    cprint(__doc__, "green")
-
-
 class DojoCli(cmd.Cmd):
-    intro()
-
-    prompt = "Dojo ~> "
-    file = None
+    cprint(__doc__, "green")
+    prompt = "dojo$ "
     dojo = Dojo()
 
     @app_exec
@@ -80,7 +73,7 @@ class DojoCli(cmd.Cmd):
         except KeyError:
             cprint("Invalid command '{}'!!! try fellow or staff"
                    .format(arg["<designation>"]), "red")
-            cprint(self.do_create_room.__doc__, "green")
+            cprint(self.do_add_person.__doc__, "green")
 
     @app_exec
     def do_print_room(self, arg):
@@ -88,15 +81,29 @@ class DojoCli(cmd.Cmd):
         Usage:
             print_room <room_name>
         """
-        self.dojo.print_room(arg)
+        try:
+            room_name = arg["<room_name>"]
+            self.dojo.print_room(room_name)
+        except KeyError:
+            cprint("Room '{}' doesn't exist"
+                   .format(arg["<room_name>"]), "red")
+            cprint("Available rooms" + self.dojo.all_rooms, "green")
 
     @app_exec
     def do_print_allocations(self, arg):
         """Prints a list of allocations onto the screen
         Usage:
-            print_allocations [-o]
+            print_allocations [--o=filename]
         """
         self.dojo.print_allocations(arg)
+        
+    @app_exec
+    def do_print_unallocated(self, arg):
+        """Prints a list of allocations onto the screen
+        Usage:
+            print_unallocated [--o=filename]
+        """
+        self.dojo.print_unallocated(arg)
 
     @app_exec
     def do_q(self, arg):
