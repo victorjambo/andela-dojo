@@ -5,6 +5,7 @@ Usage:
     add_person <first_name> <last_name> <designation> [-w]
     print_room <room_name>
     print_allocations [-o]
+    print_unallocated [-o]
     q
     (-i | --interactive)
     Options:
@@ -13,8 +14,8 @@ Usage:
     -v --version
 """
 import cmd
+import sys
 from docopt import docopt, DocoptExit
-from pyfiglet import figlet_format
 from termcolor import cprint
 from src.dojo import Dojo
 
@@ -44,16 +45,9 @@ def app_exec(func):
     return fn
 
 
-def intro():
-    cprint(figlet_format("Dojo", font="slant"), "blue")
-    cprint(__doc__, "green")
-
-
 class DojoCli(cmd.Cmd):
-    intro()
-
-    prompt = "Dojo ~> "
-    file = None
+    cprint(__doc__, "green")
+    prompt = "dojo$ "
     dojo = Dojo()
 
     @app_exec
@@ -74,7 +68,12 @@ class DojoCli(cmd.Cmd):
         Usage:
             add_person <first_name> <last_name> <designation> [-w]
         """
-        self.dojo.add_person(arg)
+        try:
+            self.dojo.add_person(arg)
+        except KeyError:
+            cprint("Invalid command '{}'!!! try fellow or staff"
+                   .format(arg["<designation>"]), "red")
+            cprint(self.do_add_person.__doc__, "green")
 
     @app_exec
     def do_print_room(self, arg):
@@ -82,22 +81,54 @@ class DojoCli(cmd.Cmd):
         Usage:
             print_room <room_name>
         """
-        self.dojo.print_room(arg)
-
-    @app_exec
-    def do_my_rooms(self, arg):
-        """
-        Usage: my_rooms [p]
-        """
-        self.dojo.print_all_rooms(arg)
+        try:
+            room_name = arg["<room_name>"]
+            self.dojo.print_room(room_name)
+        except KeyError:
+            cprint("Room '{}' doesn't exist"
+                   .format(arg["<room_name>"]), "red")
+            cprint("Available rooms: " + ", ".join(
+                [room.room_name for room in self.dojo.all_rooms]), "green")
 
     @app_exec
     def do_print_allocations(self, arg):
         """Prints a list of allocations onto the screen
         Usage:
-            print_allocations [-o]
+            print_allocations [--o=filename]
         """
-        self.dojo.print_allocations(arg)
+        filename = arg["--o"]
+        if arg["--o"]:
+            try:
+                close = sys.stdout
+                sys.stdout = open(filename + ".txt", "w")
+                self.dojo.print_allocations()
+                sys.stdout = close
+                cprint("successfully created file {}".format(filename),
+                       "green")
+            except TypeError:
+                cprint("Couldn't save it to file", "red")
+        else:
+            self.dojo.print_allocations()
+
+    @app_exec
+    def do_print_unallocated(self, arg):
+        """Prints a list of allocations onto the screen
+        Usage:
+            print_unallocated [--o=filename]
+        """
+        filename = arg["--o"]
+        if arg["--o"]:
+            try:
+                close = sys.stdout
+                sys.stdout = open(filename + ".txt", "w")
+                self.dojo.print_unallocated()
+                sys.stdout = close
+                cprint("successfully created file {}".format(filename),
+                       "green")
+            except TypeError:
+                cprint("Couldn't save it to file", "red")
+        else:
+            self.dojo.print_unallocated()
 
     @app_exec
     def do_q(self, arg):
@@ -106,6 +137,19 @@ class DojoCli(cmd.Cmd):
         Usage: q
         """
         exit()
+
+    def create_file(self, filename):
+        """Save text to file
+        """
+        try:
+            close = sys.stdout
+            sys.stdout = open(filename + ".txt", "w")
+            self.dojo.print_unallocated()
+            sys.stdout = close
+            cprint("successfully created file {}".format(filename),
+                   "green")
+        except TypeError:
+            cprint("Couldn't save it to file", "red")
 
 
 if __name__ == '__main__':
