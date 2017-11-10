@@ -115,9 +115,9 @@ class Dojo(object):
         """
         members = self.room_name_map[room_name]
         print(room_name)
-        print("-" * 30)
+        print("-" * 45)
         for member in members:
-            print(member + ", "),
+            print(member, end=", ")
         print("\n")
 
     def print_allocations(self):
@@ -133,7 +133,7 @@ class Dojo(object):
         Specifying the -o option outputs the info to the txt file provided
         """
         for person in self.unallocated_people:
-            print(person.name + " (" + person.__class__.__name__ + "), "),
+            print(person.name + " (" + person.__class__.__name__ + "), ")
         print("\n")
 
     @property
@@ -148,7 +148,7 @@ class Dojo(object):
         """
         self.office_with_occupants.update(self.livingspace_with_occupants)
         new_list = {}
-        for key, value in self.office_with_occupants.iteritems():
+        for key, value in self.office_with_occupants.items():
             new_list[key.room_name] = []
             for item in value:
                 new_list[key.room_name].append(item.name)

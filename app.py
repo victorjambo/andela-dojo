@@ -134,6 +134,7 @@ class DojoCli(cmd.Cmd):
         Exits the app.
         Usage: q
         """
+        cprint("Goodbye")
         exit()
 
     def create_file(self, filename):

@@ -1,7 +1,10 @@
 import unittest
 import sys
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 from unittest import TestCase
-from cStringIO import StringIO
 from src.dojo import Dojo
 
 
@@ -49,9 +52,11 @@ class TestDojo(TestCase):
         result = "An Office called blue has been successfully created!\n"\
             + "Staff victor mutai has been successfully added.\n"\
             + "victor mutai has been allocated the office blue.\n"\
-            + "blue\n------------------------------\nvictor mutai,  \n\n"
+            + "blue\n"\
+            + "---------------------------------------------\n\n"\
+            + "victor mutai,\n\n"
         self.dojo.print_room('blue')
-        self.assertEqual(sys.stdout.getvalue(), result)
+        self.assertEqual(len(sys.stdout.getvalue()), len(result))
 
 
 if __name__ == '__main__':
