@@ -78,7 +78,7 @@ class DojoCli(cmd.Cmd):
 
     @app_exec
     def do_print_room(self, arg):
-        """Prints  the names of all the people in room_name
+        """Print names of all the people in room_name
         Usage:
             print_room <room_name>
         """
@@ -93,21 +93,18 @@ class DojoCli(cmd.Cmd):
 
     @app_exec
     def do_print_allocations(self, arg):
-        """Prints a list of rooms with allocated people onto the screen
+        """Print rooms with allocated people onto the screen
         Usage:
             print_allocations [--o=filename]
         """
         filename = arg["--o"]
         if filename:
-            try:
-                close = sys.stdout
-                sys.stdout = open(filename + ".txt", "w")
-                self.dojo.print_allocations()
-                sys.stdout = close
-                cprint("successfully created file {}".format(filename),
-                       "green")
-            except TypeError:
-                cprint("Couldn't save it to file", "red")
+            close = sys.stdout
+            sys.stdout = open(filename + ".txt", "w")
+            self.dojo.print_allocations()
+            sys.stdout = close
+            cprint("successfully created file {}".format(filename),
+                   "green")
         else:
             self.dojo.print_allocations()
 
