@@ -88,9 +88,10 @@ class Dojo(object):
         Used in:
             allocate_random_room
         """
+        secure_random = random.SystemRandom()
         selected_room = {}
         if len(available_room):
-            selected_room[room] = random.choice(available_room)
+            selected_room[room] = secure_random.choice(available_room)
             room_with_occupants[selected_room[room]].append(new_person)
             print("{} has been allocated the office {}."
                   .format(new_person.name, selected_room[room].room_name))
