@@ -52,7 +52,7 @@ class DojoCli(cmd.Cmd):
 
     @app_exec
     def do_create_room(self, arg):
-        """Creates a new room
+        """Adds new room to Dojo
         Usage: create_room <room_type> <room_name> ...
         """
         try:
@@ -64,7 +64,8 @@ class DojoCli(cmd.Cmd):
 
     @app_exec
     def do_add_person(self, arg):
-        """Creates a new person
+        """This command handles creation of person and allocated
+        random room to new person
         Usage:
             add_person <first_name> <last_name> <designation> [-w]
         """
@@ -97,7 +98,7 @@ class DojoCli(cmd.Cmd):
             print_allocations [--o=filename]
         """
         filename = arg["--o"]
-        if arg["--o"]:
+        if filename:
             try:
                 close = sys.stdout
                 sys.stdout = open(filename + ".txt", "w")
@@ -116,17 +117,17 @@ class DojoCli(cmd.Cmd):
         Usage:
             print_unallocated [--o=filename]
         """
-        filename = arg["--o"]
-        if arg["--o"]:
+        filename_unallocated = arg["--o"]
+        if filename_unallocated:
             try:
-                close = sys.stdout
-                sys.stdout = open(filename + ".txt", "w")
+                closed = sys.stdout
+                sys.stdout = open(filename_unallocated + ".txt", "w")
                 self.dojo.print_unallocated()
-                sys.stdout = close
-                cprint("successfully created file {}".format(filename),
-                       "green")
+                sys.stdout = closed
+                cprint("successfully created file {}"
+                       .format(filename_unallocated), "green")
             except TypeError:
-                cprint("Couldn't save it to file", "red")
+                cprint("Could not save file", "red")
         else:
             self.dojo.print_unallocated()
 

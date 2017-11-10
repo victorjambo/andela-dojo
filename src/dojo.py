@@ -133,7 +133,7 @@ class Dojo(object):
         Specifying the -o option outputs the info to the txt file provided
         """
         for person in self.unallocated_people:
-            print(person.name),
+            print(person.name + " (" + person.__class__.__name__ + "), "),
         print("\n")
 
     @property
