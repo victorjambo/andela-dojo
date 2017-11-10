@@ -1,4 +1,5 @@
 import random
+from termcolor import cprint
 from src.room import *
 from src.person import *
 
@@ -51,9 +52,9 @@ class Dojo(object):
                              new_person,
                              designation,
                              wants_accomodation):
-        """Allocates the new person to a random room. 
+        """Allocates the new person to a random room.
         wants_accommodation here is an optional argument
-        which can be either True or False. 
+        which can be either True or False.
         The default value if it is not provided is False.
         Called in:
             add_person
@@ -76,7 +77,11 @@ class Dojo(object):
                                new_person,
                                self.livingspace_with_occupants)
 
-    def selected_room(self, available_room, room, new_person, room_with_occupants):
+    def selected_room(self,
+                      available_room,
+                      room,
+                      new_person,
+                      room_with_occupants):
         """Appends the new_person to dictionary of rooms
         It is called everytime we create a new_person and want to allocate
         either livingspace or office to avoid repetition
@@ -115,15 +120,15 @@ class Dojo(object):
             print(member + ", "),
         print("\n")
 
-
-    def print_allocations(self, args):
+    def print_allocations(self):
         """Prints a list of allocations onto the screen.
         Specifying the optional -o option here outputs the
         registered allocations to a txt file"""
         for room in self.room_name_map:
             self.print_room(room)
+        print("\n")
 
-    def print_unallocated(self, args):
+    def print_unallocated(self):
         """Prints a list of unallocated people to the screen.
         Specifying the -o option outputs the info to the txt file provided
         """
