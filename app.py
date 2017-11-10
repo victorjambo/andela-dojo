@@ -64,7 +64,7 @@ class DojoCli(cmd.Cmd):
 
     @app_exec
     def do_add_person(self, arg):
-        """Creates a new room
+        """Creates a new person
         Usage:
             add_person <first_name> <last_name> <designation> [-w]
         """
@@ -92,7 +92,7 @@ class DojoCli(cmd.Cmd):
 
     @app_exec
     def do_print_allocations(self, arg):
-        """Prints a list of allocations onto the screen
+        """Prints a list of rooms with allocated people onto the screen
         Usage:
             print_allocations [--o=filename]
         """
@@ -112,7 +112,7 @@ class DojoCli(cmd.Cmd):
 
     @app_exec
     def do_print_unallocated(self, arg):
-        """Prints a list of allocations onto the screen
+        """Prints a list of unallocated people onto the screen
         Usage:
             print_unallocated [--o=filename]
         """

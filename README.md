@@ -99,17 +99,32 @@ add_person Mutai Vic fellow
 The print methods allow you to print out room allocations for all rooms, one room or list of unallocated people.
 You can also specify an optional `--o` parameter to write the data to a file.
 
+**Print room**
+
+Print out a list of all people (staff members and fellows) in the specified room
+
+```bash
+print_room <room_name>
+```
+
 **Print room allocations**
 
 Print out a list of all room allocations at dojo
 ```bash
-print_allocations [-o]
+print_allocations [--o=filename]
 ```
+
+**Print unallocated**
+Prints out list of all people not allocated a room
+```bash
+print_unallocated [--o=filename]
+```
+
 
 **4. Quit Dojo!**
 To exit from the application, simply type `q` on your app
 ```bash
-quit
+q
 ```
 
 You can get out of the Virtual environment by simply typing `deactivate` on your commandline

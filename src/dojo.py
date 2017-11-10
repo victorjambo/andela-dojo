@@ -1,5 +1,4 @@
 import random
-from termcolor import cprint
 from src.room import *
 from src.person import *
 
@@ -8,10 +7,11 @@ class Dojo(object):
     """Class Dojo to represent the building
     Creates room, adds people to rooms and saves all that
     """
+    unallocated_people = []
+
     def __init__(self):
         self.all_rooms = []
         self.all_people = []
-        self.unallocated_people = []
         self.livingspace_with_occupants = {}
         self.office_with_occupants = {}
 
@@ -77,8 +77,8 @@ class Dojo(object):
                                new_person,
                                self.livingspace_with_occupants)
 
-    def selected_room(self,
-                      available_room,
+    @staticmethod
+    def selected_room(available_room,
                       room,
                       new_person,
                       room_with_occupants):
@@ -96,7 +96,7 @@ class Dojo(object):
                   .format(new_person.name, selected_room[room].room_name))
         else:
             print('No {} available'.format(room))
-            self.unallocated_people.append(new_person)
+            Dojo().unallocated_people.append(new_person)
 
     @staticmethod
     def available_room(rooms, rooms_with_occupants):
