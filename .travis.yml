@@ -4,6 +4,14 @@ python:
 # command to install dependencies
 install:
   - "pip3 install -r requirements.txt"
+  - "pip3 install python-coveralls"
 # command to run tests
 script:
-  - nosetests
+  - nosetests --with-coverage --cover-package=src
+  - coveralls
+after_success:
+ - coveralls
+notifications:
+  slack:
+    on_success: never
+    on_failure: never
