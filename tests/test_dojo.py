@@ -13,9 +13,9 @@ class TestDojo(TestCase):
         self.args = {'<room_type>': 'office', '<room_name>': ['blue']}
         self.wrong_args = {'<room_type>': 'space', '<room_name>': ['blue']}
         self.person_args = {'-w': False,
-                       '<designation>': 'staff',
-                       '<first_name>': 'victor',
-                       '<last_name>': 'mutai'}
+                            '<designation>': 'staff',
+                            '<first_name>': 'victor',
+                            '<last_name>': 'mutai'}
 
     def test_create_room_successfully(self):
         """Test room creation with room count"""
@@ -41,18 +41,17 @@ class TestDojo(TestCase):
                  " been successfully added.\nNo office available\n"
         self.dojo.add_person(self.person_args)
         self.assertEqual(sys.stdout.getvalue(), result)
-    
+
     def test_print_room(self):
         """test room"""
         self.dojo.create_room(self.args)
         self.dojo.add_person(self.person_args)
-        result = ['blue']
-        res = None
-        close = sys.stdout
-        sys.stdout = res
+        result = "An Office called blue has been successfully created!\n"\
+            + "Staff victor mutai has been successfully added.\n"\
+            + "victor mutai has been allocated the office blue.\n"\
+            + "blue\n------------------------------\nvictor mutai,  \n\n"
         self.dojo.print_room('blue')
-        sys.stdout = close
-        self.assertEqual(res, result)
+        self.assertEqual(sys.stdout.getvalue(), result)
 
 
 if __name__ == '__main__':
