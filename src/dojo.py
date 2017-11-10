@@ -10,9 +10,9 @@ class Dojo(object):
     def __init__(self):
         self.all_rooms = []
         self.all_people = []
+        self.unallocated_people = []
         self.livingspace_with_occupants = {}
         self.office_with_occupants = {}
-        self.unallocated_people = {}
 
     def create_room(self, args):
         """ Creates rooms in the Dojo.
@@ -76,8 +76,7 @@ class Dojo(object):
                                new_person,
                                self.livingspace_with_occupants)
 
-    @staticmethod
-    def selected_room(available_room, room, new_person, room_with_occupants):
+    def selected_room(self, available_room, room, new_person, room_with_occupants):
         """Appends the new_person to dictionary of rooms
         It is called everytime we create a new_person and want to allocate
         either livingspace or office to avoid repetition
@@ -92,6 +91,7 @@ class Dojo(object):
                   .format(new_person.name, selected_room[room].room_name))
         else:
             print('No {} available'.format(room))
+            self.unallocated_people.append(new_person)
 
     @staticmethod
     def available_room(rooms, rooms_with_occupants):
@@ -122,29 +122,14 @@ class Dojo(object):
         registered allocations to a txt file"""
         for room in self.room_name_map:
             self.print_room(room)
-        if filename:
-            self.create_file(filename)
-        
+
     def print_unallocated(self, args):
         """Prints a list of unallocated people to the screen.
         Specifying the -o option outputs the info to the txt file provided
         """
-        filename = args['--o']
-        for room in self.room_name_map:
-            self.print_room(room)
-        if filename:
-            self.create_file(filename)
-    
-    @staticmethod
-    def create_file(filename):
-        """Creates a file"""
-        try:
-            file = open(filename + '.txt', 'w')
-            file.write('self.room_name_map')
-            file.close()
-            print('successfully created file and saved into it')
-        except TypeError:
-            print("Couldn't save it to file")
+        for person in self.unallocated_people:
+            print(person.name),
+        print("\n")
 
     @property
     def room_name_map(self):

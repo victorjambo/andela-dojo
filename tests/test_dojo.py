@@ -16,7 +16,6 @@ class TestDojo(TestCase):
                        '<designation>': 'staff',
                        '<first_name>': 'victor',
                        '<last_name>': 'mutai'}
-        self.print_args = {'<room_name>': 'blue'}
 
     def test_create_room_successfully(self):
         """Test room creation with room count"""
@@ -48,8 +47,12 @@ class TestDojo(TestCase):
         self.dojo.create_room(self.args)
         self.dojo.add_person(self.person_args)
         result = ['blue']
-        self.dojo.print_room(self.print_args)
-        self.assertEqual(sys.stdout.getvalue(), result)
+        res = None
+        close = sys.stdout
+        sys.stdout = res
+        self.dojo.print_room('blue')
+        sys.stdout = close
+        self.assertEqual(res, result)
 
 
 if __name__ == '__main__':

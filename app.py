@@ -14,6 +14,7 @@ Usage:
     -v --version
 """
 import cmd
+import sys
 from docopt import docopt, DocoptExit
 from pyfiglet import figlet_format
 from termcolor import cprint
@@ -95,7 +96,18 @@ class DojoCli(cmd.Cmd):
         Usage:
             print_allocations [--o=filename]
         """
-        self.dojo.print_allocations(arg)
+        filename = arg["--o"]
+        if arg["--o"]:
+            try:
+                close = sys.stdout
+                sys.stdout = open(filename + ".txt", "w")
+                self.dojo.print_allocations(arg)
+                sys.stdout = close
+                cprint("successfully created file {}".format(filename), "green")
+            except TypeError:
+                cprint("Couldn't save it to file", "red")
+        else:
+            self.dojo.print_allocations(arg)
         
     @app_exec
     def do_print_unallocated(self, arg):
@@ -103,7 +115,18 @@ class DojoCli(cmd.Cmd):
         Usage:
             print_unallocated [--o=filename]
         """
-        self.dojo.print_unallocated(arg)
+        filename = arg["--o"]
+        if arg["--o"]:
+            try:
+                close = sys.stdout
+                sys.stdout = open(filename + ".txt", "w")
+                self.dojo.print_unallocated(arg)
+                sys.stdout = close
+                cprint("successfully created file {}".format(filename), "green")
+            except TypeError:
+                cprint("Couldn't save it to file", "red")
+        else:
+            self.dojo.print_unallocated(arg)
 
     @app_exec
     def do_q(self, arg):
