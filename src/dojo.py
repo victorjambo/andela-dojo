@@ -42,8 +42,9 @@ class Dojo(object):
         map_people = {'staff': Staff, 'fellow': Fellow}
         designation = args["<designation>"].lower()
         wants_accomodation = args["-w"]
-        new_person = map_people[designation](person_name)
-
+        person_id = len(self.all_people) + 1
+        new_person = map_people[designation](person_id, person_name)
+        self.all_people.append(new_person)
         print("{} {} has been successfully added."
               .format(new_person.__class__.__name__, new_person.name))
         self.allocate_random_room(new_person, designation, wants_accomodation)
@@ -154,3 +155,39 @@ class Dojo(object):
             for item in value:
                 new_list[key.room_name].append(item.name)
         return new_list
+
+    def reallocate_person(self, args):
+        # new_room_name = args['<new_room_name>']
+        person_identifier = int(args['<person_identifier>'])
+        person = self.get_person_by_id(person_identifier)
+        if not person:
+            print("Person with ID '{}' doesn't exist "
+                  .format(person_identifier))
+            return
+        room_key = self.assigned_room(person)
+        if not room_key:
+            self.allocate_random_room(person,
+                                      person.__class__.__name__,
+                                      False)
+            return
+        list_of_people_in_room = self.room_name_map[room_key]
+        list_of_people_in_room.remove(person.name)
+        print(list_of_people_in_room)
+        self.allocate_random_room(person,
+                                  person.__class__.__name__,
+                                  False)
+
+    def assigned_room(self, person):
+        for key, rooms in self.room_name_map.items():
+            for room in rooms:
+                if person.name in room:
+                    return key
+        return False
+
+    def get_person_by_id(self, uid):
+        """Returns name of the person is excist
+        """
+        for person in self.all_people:
+            if person.person_id == uid:
+                return person
+            return False

@@ -1,9 +1,1 @@
-build:
-    tests:
-        override:
-            -
-                command: './run-tests.sh'
-                coverage:
-                    file: '.coverage'
-                    config_file: '.coveragerc'
-                    format: 'py-cc'
+!coverage.py: This is a private format, don't read it directly!{"lines": {"/home/victor/Desktop/python/project-dojo/pro-dojo/src/person.py": [1, 2, 3, 4, 6, 8, 11, 12, 13, 16, 17, 18], "/home/victor/Desktop/python/project-dojo/pro-dojo/src/__init__.py": [1], "/home/victor/Desktop/python/project-dojo/pro-dojo/db/__init__.py": [1], "/home/victor/Desktop/python/project-dojo/pro-dojo/src/dojo.py": [1, 2, 3, 6, 9, 10, 12, 13, 14, 15, 16, 18, 24, 25, 26, 27, 28, 29, 30, 31, 32, 35, 36, 38, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 52, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 81, 92, 93, 94, 95, 96, 97, 98, 100, 101, 103, 109, 110, 111, 112, 113, 115, 118, 119, 120, 121, 122, 123, 125, 133, 141, 151, 152, 153, 154, 155, 156, 157, 159, 180, 187], "/home/victor/Desktop/python/project-dojo/pro-dojo/src/room.py": [1, 2, 3, 4, 5, 7, 9, 12, 13, 14, 17, 18, 19]}}

@@ -6,8 +6,8 @@ Usage:
     print_room <room_name>
     print_allocations [-o]
     print_unallocated [-o]
-    q
-    (-i | --interactive)
+    reallocate_person <person_identifier> <new_room_name>
+    q (quit)
     Options:
     -h --help Show this screen.
     -i --interactive Interactive mode.
@@ -127,6 +127,14 @@ class DojoCli(cmd.Cmd):
                 cprint("Could not save file", "red")
         else:
             self.dojo.print_unallocated()
+
+    @app_exec
+    def do_reallocate_person(self, arg):
+        """Reallocate person
+        Usage:
+            reallocate_person <person_identifier> <new_room_name>
+        """
+        self.dojo.reallocate_person(arg)
 
     @app_exec
     def do_q(self, arg):
