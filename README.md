@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/victorjambo/andela-dojo.svg?branch=master)](https://travis-ci.org/victorjambo/andela-dojo)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/victorjambo/andela-dojo/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/victorjambo/andela-dojo/?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/59f0c8cadda84fbd803778823074963a)](https://www.codacy.com/app/victorjambo/andela-dojo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=victorjambo/andela-dojo&amp;utm_campaign=Badge_Grade)
-[![Code Coverage](https://scrutinizer-ci.com/g/victorjambo/andela-dojo/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/victorjambo/andela-dojo/?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/victorjambo/andela-dojo/badge.svg?branch=master)](https://coveralls.io/github/victorjambo/andela-dojo?branch=master)
 # Dojo
 Welcome to Dojo. Dojo is a room allocation app. It enables a user to manage the living and office spaces by allocating the fellows and staff members respectively.
 
