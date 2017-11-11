@@ -157,7 +157,7 @@ class Dojo(object):
         return new_list
 
     def reallocate_person(self, args):
-        new_room_name = args['<new_room_name>']
+        # new_room_name = args['<new_room_name>']
         person_identifier = int(args['<person_identifier>'])
         person = self.get_person_by_id(person_identifier)
         if not person:
