@@ -5,9 +5,9 @@ from src.person import Person, Fellow, Staff
 
 class TestPerson(TestCase):
     def setUp(self):
-        self.vm_person = Person('victormutai')
-        self.vm_fellow = Fellow('victormutai')
-        self.vm_staff = Staff('victormutai')
+        self.vm_person = Person(1, 'victormutai')
+        self.vm_fellow = Fellow(2, 'victormutai')
+        self.vm_staff = Staff(3, 'victormutai')
 
     def test_instance(self):
         self.assertIsInstance(self.vm_staff, Staff)
