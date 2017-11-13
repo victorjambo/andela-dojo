@@ -1,4 +1,6 @@
 import random
+from termcolor import cprint
+from terminaltables import AsciiTable
 from src.room import *
 from src.person import *
 
@@ -32,8 +34,8 @@ class Dojo(object):
                 self.office_with_occupants[new_room] = []
             else:
                 self.livingspace_with_occupants[new_room] = []
-            print ("An {} called {} has been successfully created!"
-                   .format(new_room.__class__.__name__, new_room.room_name))
+            cprint ("An {} called {} has been successfully created!"
+                   .format(new_room.__class__.__name__, new_room.room_name), 'green')
 
     def add_person(self, args):
         """Adds a person to the system and allocates the person to a random room
@@ -94,10 +96,10 @@ class Dojo(object):
         if len(available_room):
             selected_room[room] = secure_random.choice(available_room)
             room_with_occupants[selected_room[room]].append(new_person)
-            print("{} has been allocated the office {}."
-                  .format(new_person.name, selected_room[room].room_name))
+            cprint("{} has been allocated the office {}."
+                  .format(new_person.name, selected_room[room].room_name), 'blue')
         else:
-            print('No {} available'.format(room))
+            cprint('No {} available'.format(room), 'yellow')
             Dojo().unallocated_people.append(new_person)
 
     @staticmethod
@@ -116,11 +118,11 @@ class Dojo(object):
         """Prints the names of all the people in room_name.
         """
         members = self.room_name_map[room_name]
-        print(room_name)
-        print("-" * 45)
+        table_members = [["Members in room: ", room_name]]
         for member in members:
-            print(member, end=", ")
-        print("\n")
+            table_members.append([member])
+        table_members = AsciiTable(table_members)
+        cprint(table_members.table, 'blue')
 
     def print_allocations(self):
         """Prints a list of allocations onto the screen.
@@ -128,15 +130,17 @@ class Dojo(object):
         registered allocations to a txt file"""
         for room in self.room_name_map:
             self.print_room(room)
-        print("\n")
 
     def print_unallocated(self):
         """Prints a list of unallocated people to the screen.
         Specifying the -o option outputs the info to the txt file provided
         """
+        table_data = [['id', 'Name', 'Designation','Missing']]
         for person in self.unallocated_people:
-            print(person.name + " (" + person.__class__.__name__ + "), ")
-        print("\n")
+            room = 'Office' if table_data[-1][0] != person.person_id else 'LivingSpace'
+            table_data.append([person.person_id, person.name, person.__class__.__name__, room])
+        table = AsciiTable(table_data)
+        cprint(table.table, 'blue')
 
     @property
     def room_name_map(self):
@@ -191,3 +195,15 @@ class Dojo(object):
             if person.person_id == uid:
                 return person
             return False
+    
+    def load_people(self):
+        file = open("people.txt", "r")
+        for line in file:
+            arg = {}
+            line = line.split()
+            for index, item in enumerate(line):
+                arg["<first_name>"] = line[0]
+                arg["<last_name>"] = line[1]
+                arg["<designation>"] = line[2]
+                arg["-w"] = True if len(line) == 4 else False
+            self.add_person(arg)

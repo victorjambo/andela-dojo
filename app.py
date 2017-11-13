@@ -7,6 +7,7 @@ Usage:
     print_allocations [-o]
     print_unallocated [-o]
     reallocate_person <person_identifier> <new_room_name>
+    load_people
     q (quit)
     Options:
     -h --help Show this screen.
@@ -135,6 +136,14 @@ class DojoCli(cmd.Cmd):
             reallocate_person <person_identifier> <new_room_name>
         """
         self.dojo.reallocate_person(arg)
+        
+    @app_exec
+    def do_load_people(self, arg):
+        """load people from a file
+        Usage:
+            load_people
+        """
+        self.dojo.load_people()
 
     @app_exec
     def do_q(self, arg):
