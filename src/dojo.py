@@ -48,8 +48,10 @@ class Dojo(object):
         person_id = len(self.all_people) + 1000
         new_person = map_people[designation](person_id, person_name)
         self.all_people.append(new_person)
-        print("{} {} has been successfully added."
-              .format(new_person.__class__.__name__, new_person.name))
+        cprint("{} {} Staff ID {} has been successfully added."
+               .format(new_person.__class__.__name__,
+                       new_person.name,
+                       new_person.person_id), 'green')
         self.allocate_random_room(new_person, designation, wants_accomodation)
 
     def allocate_random_room(self,
@@ -171,42 +173,59 @@ class Dojo(object):
         return new_list
 
     def reallocate_person(self, args):
-        # new_room_name = args['<new_room_name>']
+        """Relocate person
+        unfinished:
+            remove person from that list that we found current room in
+            yes/no
+        """
+        new_room_name = args['<new_room_name>']
         person_identifier = int(args['<person_identifier>'])
         person = self.get_person_by_id(person_identifier)
         if not person:
-            print("Person with ID '{}' doesn't exist "
-                  .format(person_identifier))
+            cprint("Person with ID '{}' doesn't exist "
+                   .format(person_identifier), 'yellow')
             return
-        room_key = self.assigned_room(person)
-        if not room_key:
-            self.allocate_random_room(person,
-                                      person.__class__.__name__,
-                                      False)
+        current_room = self.assigned_room(person)
+        if not current_room:
+            cprint("Room doesn't exist", "red")
             return
-        list_of_people_in_room = self.room_name_map[room_key]
-        list_of_people_in_room.remove(person.name)
-        print(list_of_people_in_room)
-        self.allocate_random_room(person,
-                                  person.__class__.__name__,
-                                  False)
+        if current_room.room_name == new_room_name:
+            cprint("You are trying to move within same room", "red")
+            print("\n")
+            cprint("Would you live to create room?", "red")
+            return
+        self.relocate_to_new_room(new_room_name, person)
 
     def assigned_room(self, person):
-        for key, rooms in self.room_name_map.items():
+        """Returns room name that user is currently in
+        otherwise return false
+        tuple
+        map = {1: self.office_with_occupants,
+               2: self.livingspace_with_occupants}
+        """
+        for key, rooms in self.office_with_occupants.items():
             for room in rooms:
-                if person.name in room:
+                if person in self.office_with_occupants[key]:
                     return key
         return False
 
     def get_person_by_id(self, uid):
-        """Returns name of the person is excist
+        """Gets name of the person whose id is provided
+        If person is not will return False
         """
         for person in self.all_people:
             if person.person_id == uid:
                 return person
             return False
 
+    def relocate_to_new_room(self, new_room_name, person):
+        for room, people in self.office_with_occupants.items():
+            if room.room_name == new_room_name:
+                self.office_with_occupants[room].append(person)
+
     def load_people(self):
+        """Function to add people to dojo from list of people in file
+        """
         file = open("people.txt", "r")
         for line in file:
             arg = {}
