@@ -34,8 +34,9 @@ class Dojo(object):
                 self.office_with_occupants[new_room] = []
             else:
                 self.livingspace_with_occupants[new_room] = []
-            cprint ("An {} called {} has been successfully created!"
-                   .format(new_room.__class__.__name__, new_room.room_name), 'green')
+            cprint("An {} called {} has been successfully created!"
+                   .format(new_room.__class__.__name__, new_room.room_name),
+                   'green')
 
     def add_person(self, args):
         """Adds a person to the system and allocates the person to a random room
@@ -44,7 +45,7 @@ class Dojo(object):
         map_people = {'staff': Staff, 'fellow': Fellow}
         designation = args["<designation>"].lower()
         wants_accomodation = args["-w"]
-        person_id = len(self.all_people) + 1
+        person_id = len(self.all_people) + 1000
         new_person = map_people[designation](person_id, person_name)
         self.all_people.append(new_person)
         print("{} {} has been successfully added."
@@ -93,11 +94,13 @@ class Dojo(object):
         """
         secure_random = random.SystemRandom()
         selected_room = {}
-        if len(available_room):
+        len_available_room = len(available_room)
+        if len_available_room:
             selected_room[room] = secure_random.choice(available_room)
             room_with_occupants[selected_room[room]].append(new_person)
             cprint("{} has been allocated the office {}."
-                  .format(new_person.name, selected_room[room].room_name), 'blue')
+                   .format(new_person.name, selected_room[room].room_name),
+                   'blue')
         else:
             cprint('No {} available'.format(room), 'yellow')
             Dojo().unallocated_people.append(new_person)
@@ -110,7 +113,8 @@ class Dojo(object):
         """
         available_rooms = []
         for room in rooms:
-            if room.room_capacity > len(rooms_with_occupants[room]):
+            len_rooms_with_occupants = len(rooms_with_occupants[room])
+            if room.room_capacity > len_rooms_with_occupants:
                 available_rooms.append(room)
         return available_rooms
 
@@ -135,10 +139,16 @@ class Dojo(object):
         """Prints a list of unallocated people to the screen.
         Specifying the -o option outputs the info to the txt file provided
         """
-        table_data = [['id', 'Name', 'Designation','Missing']]
+        table_data = [['id', 'Name', 'Designation', 'Missing']]
         for person in self.unallocated_people:
-            room = 'Office' if table_data[-1][0] != person.person_id else 'LivingSpace'
-            table_data.append([person.person_id, person.name, person.__class__.__name__, room])
+            room = 'Office'\
+                   if table_data[-1][0] != person.person_id\
+                   else 'LivingSpace'
+            table_data.append(
+                [person.person_id,
+                 person.name,
+                 person.__class__.__name__,
+                 room])
         table = AsciiTable(table_data)
         cprint(table.table, 'blue')
 
@@ -195,15 +205,16 @@ class Dojo(object):
             if person.person_id == uid:
                 return person
             return False
-    
+
     def load_people(self):
         file = open("people.txt", "r")
         for line in file:
             arg = {}
             line = line.split()
             for index, item in enumerate(line):
+                len_line = len(line)
                 arg["<first_name>"] = line[0]
                 arg["<last_name>"] = line[1]
                 arg["<designation>"] = line[2]
-                arg["-w"] = True if len(line) == 4 else False
+                arg["-w"] = True if len_line == 4 else False
             self.add_person(arg)
