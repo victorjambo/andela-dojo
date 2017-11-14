@@ -191,8 +191,7 @@ class Dojo(object):
             return
         if current_room.room_name == new_room_name:
             cprint("You are trying to move within same room", "red")
-            print("\n")
-            cprint("Would you live to create room?", "red")
+            cprint("Would you live to create room?Y/n", "red")
             return
         self.relocate_to_new_room(new_room_name, person)
 
@@ -237,3 +236,21 @@ class Dojo(object):
                 arg["<designation>"] = line[2]
                 arg["-w"] = True if len_line == 4 else False
             self.add_person(arg)
+            
+    def print_people(self):
+        """Returns list of all people in dojo
+        """
+        people = [['ID', 'Name', 'Designation']]
+        for person in self.all_people:
+            people.append([person.person_id, person.name, person.__class__.__name__])
+        people = AsciiTable(people)
+        cprint(people.table, 'yellow')
+    
+    def print_rooms(self):
+        """Returns list of all rooms in dojo
+        """
+        rooms = [['Room Name', 'Type', 'Max occupants']]
+        for room in self.all_rooms:
+            rooms.append([room.room_name, room.__class__.__name__, room.room_capacity])
+        rooms = AsciiTable(rooms)
+        cprint(rooms.table, 'yellow')
