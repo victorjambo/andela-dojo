@@ -174,9 +174,6 @@ class Dojo(object):
 
     def reallocate_person(self, args):
         """Relocate person
-        unfinished:
-            remove person from that list that we found current room in
-            yes/no
         """
         new_room_name = args['<new_room_name>']
         person_identifier = int(args['<person_identifier>'])
@@ -193,20 +190,42 @@ class Dojo(object):
             cprint("You are trying to move within same room", "red")
             cprint("Would you live to create room?Y/n", "red")
             return
-        self.relocate_to_new_room(new_room_name, person)
+        if self.is_within_room_type(new_room_name, current_room):
+            self.relocate_to_new_room(new_room_name, person, current_room)
+        else:
+            cprint("Can't move accross different room types. "
+                   "Or room could also be full",
+                   "red")
+
+    def is_within_room_type(self, new_room_name, current_room):
+        """Since we can't move person from living to office
+        or vice-verse, therefore we make sure we are moving within
+        same room types
+        Also checks if room is full
+        """
+        room_with_occupants = [self.office_with_occupants,
+                               self.livingspace_with_occupants]
+        for room_with_occupant in room_with_occupants:
+            for room in room_with_occupant.keys():
+                len_room = len(room_with_occupant[room])
+                if new_room_name == room.room_name:
+                    if room.room_capacity > len_room:
+                        return True
+            return False
 
     def assigned_room(self, person):
         """Returns room name that user is currently in
         otherwise return false
         tuple
-        map = {1: self.office_with_occupants,
-               2: self.livingspace_with_occupants}
         """
-        for key, rooms in self.office_with_occupants.items():
-            for room in rooms:
-                if person in self.office_with_occupants[key]:
-                    return key
-        return False
+        room_with_occupants = [self.office_with_occupants,
+                               self.livingspace_with_occupants]
+        for room_with_occupant in room_with_occupants:
+            for key, rooms in room_with_occupant.items():
+                for room in rooms:
+                    if person in room_with_occupant[key]:
+                        return key
+            return False
 
     def get_person_by_id(self, uid):
         """Gets name of the person whose id is provided
@@ -215,12 +234,23 @@ class Dojo(object):
         for person in self.all_people:
             if person.person_id == uid:
                 return person
-            return False
+        return False
 
-    def relocate_to_new_room(self, new_room_name, person):
-        for room, people in self.office_with_occupants.items():
-            if room.room_name == new_room_name:
-                self.office_with_occupants[room].append(person)
+    def relocate_to_new_room(self, new_room_name, person, current_room):
+        """Handle appending person to the new room
+        And removing person from old room
+        """
+        room_with_occupants = [self.office_with_occupants,
+                               self.livingspace_with_occupants]
+        for room_with_occupant in room_with_occupants:
+            for room, people in room_with_occupant.items():
+                if room.room_name == new_room_name:
+                    room_with_occupant[room].append(person)
+                    room_with_occupant[current_room].remove(person)
+                    cprint("Successfully moved {} to room {}"
+                           .format(person.name, new_room_name), "green")
+                    return
+            return False
 
     def load_people(self):
         """Function to add people to dojo from list of people in file
@@ -236,21 +266,25 @@ class Dojo(object):
                 arg["<designation>"] = line[2]
                 arg["-w"] = True if len_line == 4 else False
             self.add_person(arg)
-            
+
     def print_people(self):
         """Returns list of all people in dojo
         """
         people = [['ID', 'Name', 'Designation']]
         for person in self.all_people:
-            people.append([person.person_id, person.name, person.__class__.__name__])
+            people.append([person.person_id,
+                           person.name,
+                           person.__class__.__name__])
         people = AsciiTable(people)
         cprint(people.table, 'yellow')
-    
+
     def print_rooms(self):
         """Returns list of all rooms in dojo
         """
         rooms = [['Room Name', 'Type', 'Max occupants']]
         for room in self.all_rooms:
-            rooms.append([room.room_name, room.__class__.__name__, room.room_capacity])
+            rooms.append([room.room_name,
+                          room.__class__.__name__,
+                          room.room_capacity])
         rooms = AsciiTable(rooms)
         cprint(rooms.table, 'yellow')
