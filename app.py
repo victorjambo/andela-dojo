@@ -163,10 +163,9 @@ class DojoCli(cmd.Cmd):
         """
         self.dojo.print_rooms()
 
-    @app_exec
-    def do_q(self, arg):
-        """
-        Exits the app.
+    @staticmethod
+    def do_q(arg):
+        """Exit the app.
         Usage: q
         """
         cprint("Goodbye")
