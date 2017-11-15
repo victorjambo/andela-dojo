@@ -108,7 +108,7 @@ class TestDojo(TestCase):
         """Load people from file"""
         self.assertListEqual(self.dojo.all_people, [])
         self.dojo.load_people()
-        self.assertGreater(15, len(self.dojo.unallocated_people))
+        self.assertGreater(30, len(self.dojo.unallocated_people))
 
     def test_get_person_by_id(self):
         """Get Person by Id"""
@@ -117,6 +117,19 @@ class TestDojo(TestCase):
         res = self.dojo.get_person_by_id(1000).name
         current_person = self.dojo.all_people[0].name
         self.assertEqual(res, current_person)
+
+    def test_assign_room(self):
+        """Assign room to any un-allocated persons"""
+        self.test_load_people()
+        self.dojo.create_room(self.args)
+        initial_count = len(self.dojo.unallocated_people)
+        args = {'<person_identifier>': '1000',
+                '-w': False}
+        self.dojo.assign_room(args)
+        for room in self.dojo.office_with_occupants.values():
+            self.assertEqual(len(room), 1)
+        count = len(self.dojo.unallocated_people)
+        self.assertEqual((initial_count - count), 1)
 
 
 if __name__ == '__main__':

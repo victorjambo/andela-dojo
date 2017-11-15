@@ -286,3 +286,14 @@ class Dojo(object):
                           room.room_capacity])
         rooms = AsciiTable(rooms)
         cprint(rooms.table, 'yellow')
+
+    def assign_room(self, args):
+        """Assign room to any un-allocated persons"""
+        person_identifier = int(args['<person_identifier>'])
+        person = self.get_person_by_id(person_identifier)
+        wants_accomodation = args["-w"]
+        designation = person.__class__.__name__
+        self.allocate_random_room(person,
+                                  designation,
+                                  wants_accomodation)
+        self.unallocated_people.remove(person)
