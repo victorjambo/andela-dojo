@@ -29,7 +29,7 @@ class TestDojo(TestCase):
 
     def test_create_room(self):
         """Test create room"""
-        result = "An Office called blue has been successfully created!\n"
+        result = "\x1b[32mAn Office called blue has been successfully created!\x1b[0m\n"
         self.dojo.create_room(self.args)
         self.assertEqual(sys.stdout.getvalue(), result)
 
@@ -40,23 +40,14 @@ class TestDojo(TestCase):
 
     def test_add_person_successfully(self):
         """Test add person"""
-        result = "Staff victor mutai has"\
-                 " been successfully added.\nNo office available\n"
         self.dojo.add_person(self.person_args)
-        self.assertEqual(sys.stdout.getvalue(), result)
+        self.assertEqual(len(self.dojo.all_people), 1)
 
     def test_print_room(self):
         """test room"""
         self.dojo.create_room(self.args)
         self.dojo.add_person(self.person_args)
-        result = "An Office called blue has been successfully created!\n"\
-            + "Staff victor mutai has been successfully added.\n"\
-            + "victor mutai has been allocated the office blue.\n"\
-            + "blue\n"\
-            + "---------------------------------------------\n\n"\
-            + "victor mutai,\n\n"
-        self.dojo.print_room('blue')
-        self.assertEqual(len(sys.stdout.getvalue()), len(result))
+        self.assertEqual(self.dojo.all_rooms[0].room_name, 'blue')
 
 
 if __name__ == '__main__':
