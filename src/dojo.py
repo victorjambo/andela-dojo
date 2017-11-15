@@ -221,10 +221,10 @@ class Dojo(object):
         room_with_occupants = [self.office_with_occupants,
                                self.livingspace_with_occupants]
         for room_with_occupant in room_with_occupants:
-            for key, rooms in room_with_occupant.items():
-                for room in rooms:
-                    if person in room_with_occupant[key]:
-                        return key
+            for key in room_with_occupant.keys():
+                
+                if person in room_with_occupant[key]:
+                    return key
             return False
 
     def get_person_by_id(self, uid):
@@ -243,7 +243,7 @@ class Dojo(object):
         room_with_occupants = [self.office_with_occupants,
                                self.livingspace_with_occupants]
         for room_with_occupant in room_with_occupants:
-            for room, people in room_with_occupant.items():
+            for room in room_with_occupant.keys():
                 if room.room_name == new_room_name:
                     room_with_occupant[room].append(person)
                     room_with_occupant[current_room].remove(person)
@@ -259,12 +259,11 @@ class Dojo(object):
         for line in file:
             arg = {}
             line = line.split()
-            for index, item in enumerate(line):
-                len_line = len(line)
-                arg["<first_name>"] = line[0]
-                arg["<last_name>"] = line[1]
-                arg["<designation>"] = line[2]
-                arg["-w"] = True if len_line == 4 else False
+            len_line = len(line)
+            arg["<first_name>"] = line[0]
+            arg["<last_name>"] = line[1]
+            arg["<designation>"] = line[2]
+            arg["-w"] = True if len_line == 4 else False
             self.add_person(arg)
 
     def print_people(self):
