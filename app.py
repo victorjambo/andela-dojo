@@ -4,9 +4,13 @@ Usage:
     create_room <room_type> <room_name> ...
     add_person <first_name> <last_name> <designation> [-w]
     print_room <room_name>
-    print_allocations [-o]
-    print_unallocated [-o]
+    print_allocations [-o=filename]
+    print_unallocated [-o=filename]
     reallocate_person <person_identifier> <new_room_name>
+    assign_room <person_identifier> [-w]
+    load_people
+    print_all_people
+    print_all_rooms
     q (quit)
     Options:
     -h --help Show this screen.
@@ -95,9 +99,9 @@ class DojoCli(cmd.Cmd):
     def do_print_allocations(self, arg):
         """Print rooms with allocated people onto the screen
         Usage:
-            print_allocations [--o=filename]
+            print_allocations [-o=filename]
         """
-        filename = arg["--o"]
+        filename = arg["-o"]
         if filename:
             close = sys.stdout
             sys.stdout = open(filename + ".txt", "w")
@@ -112,9 +116,9 @@ class DojoCli(cmd.Cmd):
     def do_print_unallocated(self, arg):
         """Prints a list of unallocated people onto the screen
         Usage:
-            print_unallocated [--o=filename]
+            print_unallocated [-o=filename]
         """
-        filename_unallocated = arg["--o"]
+        filename_unallocated = arg["-o"]
         if filename_unallocated:
             try:
                 closed = sys.stdout
@@ -137,26 +141,44 @@ class DojoCli(cmd.Cmd):
         self.dojo.reallocate_person(arg)
 
     @app_exec
-    def do_q(self, arg):
+    def do_load_people(self, arg):
+        """load people from a file
+        Usage:
+            load_people
         """
-        Exits the app.
+        self.dojo.load_people()
+
+    @app_exec
+    def do_print_people(self, arg):
+        """load people from a file
+        Usage:
+            print_people
+        """
+        self.dojo.print_people()
+
+    @app_exec
+    def do_print_rooms(self, arg):
+        """load people from a file
+        Usage:
+            print_rooms
+        """
+        self.dojo.print_rooms()
+
+    @app_exec
+    def do_assign_room(self, arg):
+        """Assign room to any unallocated persons
+        Usage:
+            assign_room <person_identifier> [-w]
+        """
+        self.dojo.assign_room(arg)
+
+    @staticmethod
+    def do_q(arg):
+        """Exit the app.
         Usage: q
         """
         cprint("Goodbye")
         exit()
-
-    def create_file(self, filename):
-        """Save text to file
-        """
-        try:
-            close = sys.stdout
-            sys.stdout = open(filename + ".txt", "w")
-            self.dojo.print_unallocated()
-            sys.stdout = close
-            cprint("successfully created file {}".format(filename),
-                   "green")
-        except TypeError:
-            cprint("Couldn't save it to file", "red")
 
 
 if __name__ == '__main__':
