@@ -222,7 +222,6 @@ class Dojo(object):
                                self.livingspace_with_occupants]
         for room_with_occupant in room_with_occupants:
             for key in room_with_occupant.keys():
-                
                 if person in room_with_occupant[key]:
                     return key
             return False
